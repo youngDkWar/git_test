@@ -1,17 +1,19 @@
 active = True
 error = "Ошибка: неверные данные. Помощь - help"
 print('\n' + 'Добро пожаловать в интерактивный справочник, чтобы продолжить, введите "1"')
-print("")
 if input() != str(1):
     print(error[0:23:])
     active = False
 
 
+def check(value):
+    return  False
+
+
 def Commands():
     print('\n' + 'Введите одну из следующих комманд:\n')
     print('create <название>  (создать новый справочник с названием)')
-    print(
-        'add <имя_справочника> <имя> <фамилия> <телефон> <город> <email>  (добавить запись в существующий справочник)')
+    print('add <имя_справочника> <имя> <фамилия> <телефон> <город> <email> (добавить запись в существующий справочник)')
     print('update <имя_справочника> <имя> <фамилия> <телефон> <город> <email>  (изменить существующую запись)')
     print('find <имя_справочника> <значение>  (найти существующую запись по любому значению(имя, фамилия и т.д.))')
     print('delete <имя_справочника> <имя> <фамилия> <телефон> <город> <email>  (удалить существующую запись)')
@@ -23,7 +25,7 @@ def Commands():
 
 def Create(value):
     if len(value) == 2:
-        file = open(f"C:\\Users\\NIK\\Desktop\\python\\dicts\\{value[1]}.txt", 'w')
+        file = open(f"{value[1]}.txt", 'w')
         file.close()
         print(f"Справочник {value[1]} успешно создан")
     else:
@@ -40,7 +42,7 @@ def Add(value):
     if Find([value[0], value[1], value[4], value[6]], 1) != "":
         print("Ошибка: человек с таким номером или почтой уже есть в справочнике")
         return
-    file = open(f"C:\\Users\\NIK\\Desktop\\python\\dicts\\{value[1]}", 'a')
+    file = open(f"{value[1]}", 'a')
     file.write(
         f"|  {value[2].lower().capitalize()} {value[3].lower().capitalize()} {value[4]} {value[5].lower().capitalize()} {value[6]}\n")
     file.close()
@@ -50,7 +52,7 @@ def Add(value):
 def Find(value, p=0):
     if len(value) != 3 and p == 0:
         return "error"
-    file = open(f"C:\\Users\\NIK\\Desktop\\python\\dicts\\{value[1]}", 'r')
+    file = open(f"{value[1]}", 'r')
     temp = file.read().split('|')
     result = ""
     for s in temp:
@@ -67,7 +69,7 @@ def Find(value, p=0):
 
 
 def Update(value, p=""):
-    file = open(f"C:\\Users\\NIK\\Desktop\\python\\dicts\\{value[1]}", 'r')
+    file = open(f"{value[1]}", 'r')
     data = file.read().split('|')
     if Find([value[0], value[1], value[4], value[6]], 1) == "":
         print(error)
@@ -85,7 +87,7 @@ def Update(value, p=""):
     else:
         data[index] = record_1
     file.close()
-    file = open(f"C:\\Users\\NIK\\Desktop\\python\\dicts\\{value[1]}", 'w')
+    file = open(f"{value[1]}", 'w')
     file.write("|".join(data))
     file.close()
     print("Успешно\n")
