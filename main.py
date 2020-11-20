@@ -2,7 +2,7 @@ active = True
 error = "Ошибка: неверные данные. Помощь - help"
 print('\n' + 'Добро пожаловать в интерактивный справочник, чтобы продолжить, введите "1"')
 if input() != str(1):
-    print(error[0:23:])
+    print(error[0:23])
     active = False
 
 
@@ -42,7 +42,7 @@ def Add(value):
     if Find([value[0], value[1], value[4], value[6]], 1) != "":
         print("Ошибка: человек с таким номером или почтой уже есть в справочнике")
         return
-    file = open(f"{value[1]}", 'a')
+    file = open(f"{value[1]}.txt", 'a')
     file.write(
         f"|  {value[2].lower().capitalize()} {value[3].lower().capitalize()} {value[4]} {value[5].lower().capitalize()} {value[6]}\n")
     file.close()
@@ -52,7 +52,7 @@ def Add(value):
 def Find(value, p=0):
     if len(value) != 3 and p == 0:
         return "error"
-    file = open(f"{value[1]}", 'r')
+    file = open(f"{value[1]}.txt", 'r')
     temp = file.read().split('|')
     result = ""
     for s in temp:
@@ -69,7 +69,7 @@ def Find(value, p=0):
 
 
 def Update(value, p=""):
-    file = open(f"{value[1]}", 'r')
+    file = open(f"{value[1]}.txt", 'r')
     data = file.read().split('|')
     if Find([value[0], value[1], value[4], value[6]], 1) == "":
         print(error)
@@ -87,7 +87,7 @@ def Update(value, p=""):
     else:
         data[index] = record_1
     file.close()
-    file = open(f"{value[1]}", 'w')
+    file = open(f"{value[1]}.txt", 'w')
     file.write("|".join(data))
     file.close()
     print("Успешно\n")
