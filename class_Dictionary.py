@@ -1,12 +1,23 @@
 class Dictionary:
-    __active__ = True
-    __error__ = "Ошибка: неверные данные. Помощь - help"
+    __active = True
+    __error = "Ошибка: неверные данные. Помощь - help"
+
+    def _check(self, value):
+        try:
+            temp = self.find(value)
+        except FileNotFoundError:
+            print("Ошибка. Словаря с таким именем не существует")
+            return True
+        if temp == "error":
+            print(self.__error)
+            return True
+        return False
 
     def start(self):
         print('\n' + 'Добро пожаловать в интерактивный справочник, чтобы продолжить, введите "1"')
         if input() != str(1):
-            print(self.__error__[0:23])
-            self.__active__ = False
+            print(self.__error[0:23])
+            self.__active = False
         self.__cycle__()
 
     def create(self, value):
@@ -15,7 +26,7 @@ class Dictionary:
             file.close()
             print(f"Справочник {value[1]} успешно создан")
         else:
-            print(self.__error__)
+            print(self.__error)
 
     @staticmethod
     def commands():
@@ -46,7 +57,7 @@ class Dictionary:
 
     def add(self, value):
         if len(value) != 7:
-            print(self.__error__)
+            print(self.__error)
             return
         if value[6].find("@") == -1:
             print("Ошибка: неврно указан email")
@@ -65,17 +76,13 @@ class Dictionary:
         file = open(f"{value[1]}.txt", 'r')
         data = file.read().split('|')
         if self.find([value[0], value[1], value[4], value[6]], 1) == "":
-            print(self.__error__)
+            print(self.__error)
             return
         record_0 = self.find([value[0], value[1], value[4], value[6]], 1).split()[-3]
         value = [value[0], value[1], value[2].capitalize(), value[3].capitalize(), value[4], value[5].capitalize(),
                  value[6]]
         record_1 = "  " + " ".join(value[2::]) + "\n"
-        index = ""
-        for i in range(len(data)):
-            for el in data[i].split():
-                if el == record_0:
-                    index = i
+        index = [i for i in range(len(data)) for el in data[i].split() if el == record_0][0]
         if p != "":
             data[index] = ""
         else:
@@ -87,21 +94,19 @@ class Dictionary:
         print("Успешно\n")
 
     def __cycle__(self) -> None:
-        while self.__active__:
+        while self.__active:
             print('\nВведите комманду:  (help - помощь)')
-            value, flag = input(), False
-            for e in ["create", "add", "update", "find", "delete", "exit"]:
-                if value:
-                    if e == value.split()[0] or value == "help":
-                        flag = True
-                        break
-            if flag:
+            value, flag, com = input(), False, ["create", "add", "update", "find", "delete", "exit"]
+            flag = [True for e in com if value if e == value.split()[0] or value == "help"]
+            if len(flag) != 0:
                 if value == "help":
                     self.commands()
                     continue
                 value = value.split()
                 if value[0] == 'exit':
-                    self.__active__ = False
+                    self.__active = False
+                    continue
+                if self._check(value):
                     continue
                 if value[0] == 'create':
                     self.create(value)
@@ -115,7 +120,7 @@ class Dictionary:
                 if value[0] == "find":
                     result = self.find(value)
                     if result == "error":
-                        print(self.__error__)
+                        print(self.__error)
                     elif result != "":
                         print(result)
                     else:
@@ -124,4 +129,4 @@ class Dictionary:
                 if value[0] == "delete":
                     self.update(value, "1")
             else:
-                print(self.__error__)
+                print(self.__error)
